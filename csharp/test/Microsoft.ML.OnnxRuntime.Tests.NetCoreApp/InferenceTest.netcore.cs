@@ -414,8 +414,8 @@ namespace Microsoft.ML.OnnxRuntime.Tests
 
         public static IEnumerable<object[]> GetModelsForTest()
         {
-            var modelsDir = GetTestModelsDir();
-            var modelsDirInfo = new DirectoryInfo(modelsDir);
+            var modelsRootDir = GetTestModelsRootDir();
+            var modelsDirInfo = new DirectoryInfo(modelsRootDir);
             var skipModels = GetSkippedModels(modelsDirInfo);
 
             foreach (var opsetDir in getOpsetDirectories(modelsDirInfo))
@@ -423,7 +423,7 @@ namespace Microsoft.ML.OnnxRuntime.Tests
                 //var modelRoot = new DirectoryInfo(Path.Combine(modelsDir, opsetDir.Name));
                 foreach (var modelDir in opsetDir.EnumerateDirectories())
                 {
-                    if (!skipModels.ContainsKey(modelDir.Name))
+                    if (!(skipModels.ContainsKey(modelDir.Name) || opset_num < 7 || modelDir.Name.Contains("int8") || modelDir.Name.Contains("fp16")))
                     {
                         yield return new object[] { modelDir.Parent.FullName, modelDir.Name };
                     }
@@ -433,8 +433,8 @@ namespace Microsoft.ML.OnnxRuntime.Tests
 
         public static IEnumerable<object[]> GetSkippedModelForTest()
         {
-            var modelsDir = GetTestModelsDir();
-            var modelsDirInfo = new DirectoryInfo(modelsDir);
+            var modelsRootDir = GetTestModelsRootDir();
+            var modelsDirInfo = new DirectoryInfo(modelsRootDir);
             var skipModels = GetSkippedModels(modelsDirInfo);
 
             foreach (var opsetDir in getOpsetDirectories(modelsDirInfo))
@@ -821,7 +821,7 @@ namespace Microsoft.ML.OnnxRuntime.Tests
             }
         }
 
-        static string GetTestModelsDir()
+        static string GetTestModelsRootDir()
         {
             // get build directory, append downloaded models location
             var cwd = Directory.GetCurrentDirectory();
