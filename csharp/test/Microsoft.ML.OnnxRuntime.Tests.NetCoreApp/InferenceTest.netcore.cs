@@ -439,9 +439,11 @@ namespace Microsoft.ML.OnnxRuntime.Tests
 
             foreach (var opsetDir in getOpsetDirectories(modelsDirInfo))
             {
+                var opset = opsetDir.Name;
+                var opset_num = Int32.Parse(opset.Remove(0,5));
                 foreach (var modelDir in opsetDir.EnumerateDirectories())
                 {
-                    if (skipModels.ContainsKey(modelDir.Name))
+                    if (skipModels.ContainsKey(modelDir.Name) || opset_num < 7 || modelDir.Name.Contains("int8") || modelDir.Name.Contains("fp16"))
                     {
                         //Console.WriteLine("Model {0} is skipped due to the error: {1}", modelDir.FullName, skipModels[modelDir.Name]);
                         yield return new object[] { modelDir.Parent.FullName, modelDir.Name };
