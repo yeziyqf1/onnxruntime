@@ -190,6 +190,10 @@ jobs:
     workingDirectory: '$(Build.BinariesDirectory)'
     displayName: 'Create models link'
 
+  - script:
+      xcopy C:\local\models\zoo\opset6\ShuffleNet-v1 C:\local\models\zoo\opset8\ /s /e /y
+    displayName: 'temp step'
+
   - ${{ if and(eq(parameters.BuildConfig, 'RelWithDebInfo'), eq(parameters.RunOnnxRuntimeTests, true)) }}:
       - task: DotNetCoreCLI@2
         displayName: 'Test C#'
