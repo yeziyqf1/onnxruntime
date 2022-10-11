@@ -360,7 +360,6 @@ namespace Microsoft.ML.OnnxRuntime.Tests
                 { "test_sequence_map_add_1_sequence_1_tensor_expanded", "sequence type is not supported in test infra." },
                 { "test_sequence_map_add_2_sequences", "sequence type is not supported in test infra." },
                 { "test_sequence_map_identity_1_sequence", "sequence type is not supported in test infra." },
-                { "ShuffleNet-v1", "failed onnx model zoo model"}
             };
 
             // The following models fails on nocontribops win CI
@@ -426,7 +425,7 @@ namespace Microsoft.ML.OnnxRuntime.Tests
                 //var modelRoot = new DirectoryInfo(Path.Combine(modelsDir, opsetDir.Name));
                 foreach (var modelDir in opsetDir.EnumerateDirectories())
                 {
-                    if (!(skipModels.ContainsKey(modelDir.Name) || opset_num < 7 || modelDir.Name.Contains("int8") || modelDir.Name.Contains("fp16")))
+                    if (!(skipModels.ContainsKey(modelDir.Name) || opset_num < 6 || modelDir.Name.Contains("int8") || modelDir.Name.Contains("fp16")))
                     {
                         yield return new object[] { modelDir.Parent.FullName, modelDir.Name };
                     }
@@ -446,7 +445,7 @@ namespace Microsoft.ML.OnnxRuntime.Tests
                 var opset_num = Int32.Parse(opset.Remove(0,5));
                 foreach (var modelDir in opsetDir.EnumerateDirectories())
                 {
-                    if (skipModels.ContainsKey(modelDir.Name) || opset_num < 7 || modelDir.Name.Contains("int8") || modelDir.Name.Contains("fp16"))
+                    if (skipModels.ContainsKey(modelDir.Name) || opset_num < 6 || modelDir.Name.Contains("int8") || modelDir.Name.Contains("fp16"))
                     {
                         //Console.WriteLine("Model {0} is skipped due to the error: {1}", modelDir.FullName, skipModels[modelDir.Name]);
                         yield return new object[] { modelDir.Parent.FullName, modelDir.Name };
