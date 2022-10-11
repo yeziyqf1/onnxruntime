@@ -193,7 +193,8 @@ jobs:
   - script: |
       rmdir /s /q C:\local\models\zoo\opset8\ShuffleNet-v1
       dir C:\local\models\zoo\opset8\
-      xcopy C:\local\models\zoo\opset6\ShuffleNet-v1 C:\local\models\zoo\opset8\ /s /e /y
+      mkdir C:\local\models\zoo\opset8\ShuffleNet-v1
+      xcopy C:\local\models\zoo\opset6\ShuffleNet-v1 C:\local\models\zoo\opset8\ShuffleNet-v1 /s /e /y
       dir C:\local\models\zoo\opset8\
     displayName: 'temp step'
 
