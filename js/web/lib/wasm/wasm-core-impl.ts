@@ -3,7 +3,6 @@
 
 import {InferenceSession, Tensor} from 'onnxruntime-common';
 
-import {init} from './jsep';
 import {SerializableSessionMetadata, SerializableTensor} from './proxy-messages';
 import {setRunOptions} from './run-options';
 import {setSessionOptions} from './session-options';
@@ -20,9 +19,6 @@ export const initOrt = (numThreads: number, loggingLevel: number): void => {
   if (errorCode !== 0) {
     throw new Error(`Can't initialize onnxruntime. error code = ${errorCode}`);
   }
-
-  // init JSEP if available
-  init(getInstance());
 };
 
 /**
