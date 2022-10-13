@@ -359,7 +359,7 @@ namespace Microsoft.ML.OnnxRuntime.Tests
                 { "test_sequence_map_extract_shapes_expanded", "sequence type is not supported in test infra." },
                 { "test_sequence_map_add_1_sequence_1_tensor_expanded", "sequence type is not supported in test infra." },
                 { "test_sequence_map_add_2_sequences", "sequence type is not supported in test infra." },
-                { "test_sequence_map_identity_1_sequence", "sequence type is not supported in test infra." },
+                { "test_sequence_map_identity_1_sequence", "sequence type is not supported in test infra." }
             };
 
             // The following models fails on nocontribops win CI
@@ -414,8 +414,8 @@ namespace Microsoft.ML.OnnxRuntime.Tests
 
         public static IEnumerable<object[]> GetModelsForTest()
         {
-            var modelsRootDir = GetTestModelsRootDir();
-            var modelsDirInfo = new DirectoryInfo(modelsRootDir);
+            var modelsDir = GetTestModelsDir();
+            var modelsDirInfo = new DirectoryInfo(modelsDir);
             var skipModels = GetSkippedModels(modelsDirInfo);
 
             foreach (var opsetDir in getOpsetDirectories(modelsDirInfo))
@@ -425,7 +425,7 @@ namespace Microsoft.ML.OnnxRuntime.Tests
                 //var modelRoot = new DirectoryInfo(Path.Combine(modelsDir, opsetDir.Name));
                 foreach (var modelDir in opsetDir.EnumerateDirectories())
                 {
-                    if (!(skipModels.ContainsKey(modelDir.Name)))
+                    if (!skipModels.ContainsKey(modelDir.Name))
                     {
                         yield return new object[] { modelDir.Parent.FullName, modelDir.Name };
                     }
@@ -435,8 +435,8 @@ namespace Microsoft.ML.OnnxRuntime.Tests
 
         public static IEnumerable<object[]> GetSkippedModelForTest()
         {
-            var modelsRootDir = GetTestModelsRootDir();
-            var modelsDirInfo = new DirectoryInfo(modelsRootDir);
+            var modelsDir = GetTestModelsDir();
+            var modelsDirInfo = new DirectoryInfo(modelsDir);
             var skipModels = GetSkippedModels(modelsDirInfo);
 
             foreach (var opsetDir in getOpsetDirectories(modelsDirInfo))
@@ -821,7 +821,7 @@ namespace Microsoft.ML.OnnxRuntime.Tests
             }
         }
 
-        static string GetTestModelsRootDir()
+        static string GetTestModelsDir()
         {
             // get build directory, append downloaded models location
             var cwd = Directory.GetCurrentDirectory();
