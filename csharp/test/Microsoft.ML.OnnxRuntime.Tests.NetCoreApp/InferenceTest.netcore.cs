@@ -360,7 +360,7 @@ namespace Microsoft.ML.OnnxRuntime.Tests
                 { "test_sequence_map_add_1_sequence_1_tensor_expanded", "sequence type is not supported in test infra." },
                 { "test_sequence_map_add_2_sequences", "sequence type is not supported in test infra." },
                 { "test_sequence_map_identity_1_sequence", "sequence type is not supported in test infra." },
-                { "BERT_Squad-int8", "test error"},
+                { "BERT-Squad-int8", "test error"},
                 { "YOLOv3-12-int8", "test_error"}
             };
 
