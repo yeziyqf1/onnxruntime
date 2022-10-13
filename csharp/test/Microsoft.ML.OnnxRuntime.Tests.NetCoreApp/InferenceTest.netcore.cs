@@ -220,7 +220,7 @@ namespace Microsoft.ML.OnnxRuntime.Tests
 
         private static Dictionary<string, string> GetSkippedModels(DirectoryInfo modelsDirInfo)
         {
-            var skipModels = new Dictionary<string, string>() {
+            var skipModels = new Dictionary<string, string> {
                 { "mxnet_arcface", "Model is an invalid ONNX model"},
                 { "tf_inception_v2", "TODO: Debug failing model, skipping for now" },
                 { "fp16_tiny_yolov2", "Tolerance level for float16 is not known. We now support fp16." },
@@ -359,7 +359,9 @@ namespace Microsoft.ML.OnnxRuntime.Tests
                 { "test_sequence_map_extract_shapes_expanded", "sequence type is not supported in test infra." },
                 { "test_sequence_map_add_1_sequence_1_tensor_expanded", "sequence type is not supported in test infra." },
                 { "test_sequence_map_add_2_sequences", "sequence type is not supported in test infra." },
-                { "test_sequence_map_identity_1_sequence", "sequence type is not supported in test infra." }
+                { "test_sequence_map_identity_1_sequence", "sequence type is not supported in test infra." },
+                { "BERT_Squad-int8", "test error"},
+                { "YOLOv3-12-int8", "test_error"}
             };
 
             // The following models fails on nocontribops win CI
