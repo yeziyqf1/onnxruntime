@@ -420,8 +420,6 @@ namespace Microsoft.ML.OnnxRuntime.Tests
 
             foreach (var opsetDir in getOpsetDirectories(modelsDirInfo))
             {
-                var opset = opsetDir.Name;
-                var opset_num = Int32.Parse(opset.Remove(0,5));
                 //var modelRoot = new DirectoryInfo(Path.Combine(modelsDir, opsetDir.Name));
                 foreach (var modelDir in opsetDir.EnumerateDirectories())
                 {
