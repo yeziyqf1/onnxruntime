@@ -220,7 +220,7 @@ namespace Microsoft.ML.OnnxRuntime.Tests
 
         private static Dictionary<string, string> GetSkippedModels(DirectoryInfo modelsDirInfo)
         {
-            var skipModels = new Dictionary<string, string> {
+            var skipModels = new Dictionary<string, string>() {
                 { "mxnet_arcface", "Model is an invalid ONNX model"},
                 { "tf_inception_v2", "TODO: Debug failing model, skipping for now" },
                 { "fp16_tiny_yolov2", "Tolerance level for float16 is not known. We now support fp16." },
