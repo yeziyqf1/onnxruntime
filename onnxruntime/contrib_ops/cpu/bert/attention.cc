@@ -151,11 +151,28 @@ Status AttentionBase::CheckInputs(const TensorShape& input_shape,
     }
   }
 
-  int64_t kv_sequence_length = sequence_length;
   int64_t q_hidden_size = bias_dims[0] / static_cast<int64_t>(3);
   int64_t k_hidden_size = q_hidden_size;
   int64_t v_hidden_size = k_hidden_size;
+  if (qkv_hidden_sizes_.size() != 0) {
+    if (qkv_hidden_sizes_.size() != 3) {
+      return ORT_MAKE_STATUS(ONNXRUNTIME, INVALID_ARGUMENT,
+                             "qkv_hidden_sizes attribute should have 3 elements");
+    }
 
+    for (size_t i = 0; i < qkv_hidden_sizes_.size(); i++) {
+      if (qkv_hidden_sizes_[i] % num_heads_ != 0) {
+        return ORT_MAKE_STATUS(ONNXRUNTIME, INVALID_ARGUMENT,
+                               "hidden_size should be divisible by num_heads:", qkv_hidden_sizes_[i]);
+      }
+    }
+
+    q_hidden_size = qkv_hidden_sizes_[0];
+    k_hidden_size = qkv_hidden_sizes_[1];
+    v_hidden_size = qkv_hidden_sizes_[2];
+  }
+
+  int64_t kv_sequence_length = sequence_length;
   if (weights_shape == nullptr) { // no weights
     if (this->require_weights_) {
       return ORT_MAKE_STATUS(ONNXRUNTIME, INVALID_ARGUMENT, "This operator requires weights");
@@ -194,27 +211,22 @@ Status AttentionBase::CheckInputs(const TensorShape& input_shape,
     input_hidden_size = -1;
     q_hidden_size = dims[2];
     k_hidden_size = key_dims[2];
-    v_hidden_size = value_dims[1];
+    v_hidden_size = value_dims[2];
     kv_sequence_length = key_dims[1];
-  } else {  // with weights
-    if (qkv_hidden_sizes_.size() != 0) {
-      if (qkv_hidden_sizes_.size() != 3) {
-        return ORT_MAKE_STATUS(ONNXRUNTIME, INVALID_ARGUMENT,
-                               "qkv_hidden_sizes attribute should have 3 elements");
-      }
 
-      for (size_t i = 0; i < qkv_hidden_sizes_.size(); i++) {
-        if (qkv_hidden_sizes_[i] % num_heads_ != 0) {
-          return ORT_MAKE_STATUS(ONNXRUNTIME, INVALID_ARGUMENT,
-                                 "hidden_size should be divisible by num_heads:", qkv_hidden_sizes_[i]);
-        }
-      }
-
-      q_hidden_size = qkv_hidden_sizes_[0];
-      k_hidden_size = qkv_hidden_sizes_[1];
-      v_hidden_size = qkv_hidden_sizes_[2];
+    if (qkv_hidden_sizes_.size() != 0 &&
+        (q_hidden_size != qkv_hidden_sizes_[0] ||
+         k_hidden_size != qkv_hidden_sizes_[1] ||
+         v_hidden_size != qkv_hidden_sizes_[2])) {
+      return ORT_MAKE_STATUS(ONNXRUNTIME, INVALID_ARGUMENT,
+                             "qkv_hidden_sizes does not match with query, key and value input shape",
+                             " q_hidden_size=", q_hidden_size,
+                             " k_hidden_size=", k_hidden_size,
+                             " v_hidden_size=", v_hidden_size,
+                             "qkv_hidden_sizes[0]=", qkv_hidden_sizes_[0],
+                             "qkv_hidden_sizes[1]=", qkv_hidden_sizes_[1],
+                             "qkv_hidden_sizes[2]=", qkv_hidden_sizes_[2]);
     }
-  }
 
   if (q_hidden_size != k_hidden_size) {
     return ORT_MAKE_STATUS(ONNXRUNTIME, INVALID_ARGUMENT,
@@ -225,10 +237,11 @@ Status AttentionBase::CheckInputs(const TensorShape& input_shape,
     return ORT_MAKE_STATUS(ONNXRUNTIME, INVALID_ARGUMENT, "Hidden size of Q, K and V shall be same");
   }
 
-  int64_t total_sequence_length = kv_sequence_length;
   if (bias_dims[0] != q_hidden_size + k_hidden_size + v_hidden_size) {
     return ORT_MAKE_STATUS(ONNXRUNTIME, INVALID_ARGUMENT,
-                           "Input 'bias' dimension 0 should have same length as sum of Q/K/V hidden sizes");
+                           "Input 'bias' dimension 0 should have same length as sum of Q/K/V hidden sizes:",
+                           " q_hidden_size=", q_hidden_size, " k_hidden_size=", k_hidden_size, " v_hidden_size=",
+                           v_hidden_size, "bias_dims[0]=", bias_dims[0]);
   }
 
   int64_t past_sequence_length = 0;
@@ -263,9 +276,9 @@ Status AttentionBase::CheckInputs(const TensorShape& input_shape,
     }
 
     past_sequence_length = past_dims[3];
-    total_sequence_length += past_sequence_length;
   }
 
+  int64_t total_sequence_length = kv_sequence_length + past_sequence_length;
   int64_t max_sequence_length = -1;
   if (mask_index != nullptr) {  // mask_index is optional
     const auto& mask_dims = mask_index->Shape().GetDims();
