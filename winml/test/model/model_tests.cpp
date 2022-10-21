@@ -367,7 +367,7 @@ std::string GetFullNameOfTest(ITestCase* testCase, winml::LearningModelDeviceKin
   name += tokenizedModelPath[tokenizedModelPath.size() - 3];         // opset version
 
   // To introduce models from model zoo, the model path is structured like this "<source>/<opset>/<model_name>/?.onnx"
-  source = tokenizedModelPath[tokenizedModelPath.size() - 4];
+  std::string source = tokenizedModelPath[tokenizedModelPath.size() - 4];
   // `models` means the models root, the old structure, that is, the source name is empty.
   if ( source != "models"){
     name += source;
