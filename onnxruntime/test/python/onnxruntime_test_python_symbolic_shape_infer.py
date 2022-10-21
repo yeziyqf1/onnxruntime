@@ -46,12 +46,8 @@ class TestSymbolicShapeInference(unittest.TestCase):
             if filename.name.startswith("."):
                 continue  # skip some bad model files
 
-            skip_it = False
-            for model_name in skipped_models:
-                if model_name in str(filename):
-                    skip_it = True
-                    break
-            if skip_it:
+            # https://github.com/onnx/models/issues/562
+            if any( model_name in str(filename) for model_name in skipped_models):
                 print(f"Skip symbolic shape inference on : {str(filename)}")
                 continue
 
