@@ -411,6 +411,10 @@ namespace Microsoft.ML.OnnxRuntime.Tests
                 skipModels["roberta_sequence_classification"] = "System out of memory";
                 // models from model zoo
                 skipModels["VGG 19-caffe2"] = "bad allocation";
+                skipModels["VGG 19"] = "bad allocation";
+                skipModels["VGG 19-bn"] = "bad allocation";
+                skipModels["VGG 16-bn"] = "bad allocation";
+                skipModels["VGG 16-fp32"] = "bad allocation";
             }
 
             return skipModels;
