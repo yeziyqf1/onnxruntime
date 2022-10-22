@@ -370,7 +370,7 @@ std::string GetFullNameOfTest(ITestCase* testCase, winml::LearningModelDeviceKin
   std::string source = tokenizedModelPath[tokenizedModelPath.size() - 4];
   // `models` means the models root, the old structure, that is, the source name is empty.
   if ( source != "models"){
-    name += source;
+    name += "_" + source;
   }
 
   std::replace_if(name.begin(), name.end(), [](char c) { return !google::protobuf::ascii_isalnum(c); }, '_');
