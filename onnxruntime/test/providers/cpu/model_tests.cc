@@ -117,13 +117,13 @@ TEST_P(ModelTest, Run) {
     return;
   }
 #ifndef ENABLE_TRAINING
-  #ifndef USE_CUDA
+  if (provider_name != "cuda") {
     if (model_info->HasDomain(ONNX_NAMESPACE::AI_ONNX_TRAINING_DOMAIN) ||
         model_info->HasDomain(ONNX_NAMESPACE::AI_ONNX_PREVIEW_TRAINING_DOMAIN)) {
       SkipTest("It has training domain");
       return;
     }
-  #endif
+  }
 #endif
   std::set<BrokenTest> broken_tests = {
       {"slice_neg_steps",
