@@ -117,11 +117,13 @@ TEST_P(ModelTest, Run) {
     return;
   }
 #ifndef ENABLE_TRAINING
+#ifndef USE_CUDA
   if (model_info->HasDomain(ONNX_NAMESPACE::AI_ONNX_TRAINING_DOMAIN) ||
       model_info->HasDomain(ONNX_NAMESPACE::AI_ONNX_PREVIEW_TRAINING_DOMAIN)) {
     SkipTest("It has training domain");
     return;
   }
+#endif
 #endif
   std::set<BrokenTest> broken_tests = {
       {"slice_neg_steps",
@@ -594,7 +596,7 @@ TEST_P(ModelTest, Run) {
     BrokenTest t = {ToUTF8String(test_case_name), ""};
     auto iter = broken_tests.find(t);
     auto opset_version = model_info->GetNominalOpsetVersion();
-    if (iter != broken_tests.end() && 
+    if (iter != broken_tests.end() &&
         (opset_version == TestModelInfo::unknown_version || iter->broken_opset_versions_.empty() ||
          iter->broken_opset_versions_.find(opset_version) != iter->broken_opset_versions_.end() )) {
       SkipTest("It's in broken_tests");
