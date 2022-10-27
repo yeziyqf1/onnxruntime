@@ -798,6 +798,10 @@ endif()
 # External dependencies
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/external)
 
+if(NOT onnxruntime_DISABLE_ABSEIL)
+  include(external/abseil-cpp.cmake)
+endif()
+
 #protobuf begin
 
 #Here we support two build mode:
