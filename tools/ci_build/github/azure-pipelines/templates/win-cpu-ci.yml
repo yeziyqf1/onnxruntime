@@ -90,6 +90,12 @@ jobs:
     workingDirectory: '$(Build.BinariesDirectory)'
     displayName: 'Install python modules'
 
+  - script: |
+     python -m pip install -q py-cpuinfo
+     python -m cpuinfo
+    workingDirectory: '$(Build.BinariesDirectory)'
+    displayName: 'Install python modules'
+
   - ${{ if eq(parameters.RunOnnxRuntimeTests, true) }}:
       - powershell: |
          $Env:USE_MSVC_STATIC_RUNTIME=1
