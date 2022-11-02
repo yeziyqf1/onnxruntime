@@ -53,6 +53,11 @@ class ROCMExecutionProvider : public IExecutionProvider {
     return GetPerThreadContext().template GetConstOnes<T>(count);
   }
 
+  template <typename T>
+  const T* GetConstZeros(size_t count) {
+    return GetPerThreadContext().template GetConstZeros<T>(count);
+  }
+
   // Add CPU buffer to a buffer pool.
   // They can and only can be released
   // by calling EuqueueDeferredRelease.
@@ -179,6 +184,28 @@ class ROCMExecutionProvider : public IExecutionProvider {
       }
     }
 
+    template <typename T>
+    const T* GetConstZeros(size_t count) {
+      if (std::is_same<T, float>::value) {
+        if (!constant_zeros_float_) {
+          constant_zeros_float_ = rocm::CreateConstantZeros<float>();
+        }
+        return reinterpret_cast<const T*>(constant_zeros_float_->GetBuffer(stream_, count));
+      } else if (std::is_same<T, double>::value) {
+        if (!constant_zeros_double_) {
+          constant_zeros_double_ = rocm::CreateConstantZeros<double>();
+        }
+        return reinterpret_cast<const T*>(constant_zeros_double_->GetBuffer(stream_, count));
+      } else if (std::is_same<T, half>::value) {
+        if (!constant_zeros_half_) {
+          constant_zeros_half_ = rocm::CreateConstantZeros<half>();
+        }
+        return reinterpret_cast<const T*>(constant_zeros_half_->GetBuffer(stream_, count));
+      } else {
+        return nullptr;
+      }
+    }
+
     AllocatorPtr GetAllocator() const {
       return allocator_;
     }
@@ -191,6 +218,10 @@ class ROCMExecutionProvider : public IExecutionProvider {
     std::unique_ptr<rocm::IConstantBuffer<float>> constant_ones_float_;
     std::unique_ptr<rocm::IConstantBuffer<double>> constant_ones_double_;
     std::unique_ptr<rocm::IConstantBuffer<half>> constant_ones_half_;
+
+    std::unique_ptr<rocm::IConstantBuffer<float>> constant_zeros_float_;
+    std::unique_ptr<rocm::IConstantBuffer<double>> constant_zeros_double_;
+    std::unique_ptr<rocm::IConstantBuffer<half>> constant_zeros_half_;
 
     AllocatorPtr allocator_;
   };

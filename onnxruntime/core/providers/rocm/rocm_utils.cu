@@ -71,6 +71,15 @@ template std::unique_ptr<IConstantBuffer<float>> CreateConstantOnes<float>();
 template std::unique_ptr<IConstantBuffer<double>> CreateConstantOnes<double>();
 template std::unique_ptr<IConstantBuffer<half>> CreateConstantOnes<half>();
 
+template <typename T>
+std::unique_ptr<IConstantBuffer<T>> CreateConstantZeros() {
+  return std::make_unique<ConstantBufferImpl<T>>(Consts<T>::Zero);
+}
+
+template std::unique_ptr<IConstantBuffer<float>> CreateConstantZeros<float>();
+template std::unique_ptr<IConstantBuffer<double>> CreateConstantZeros<double>();
+template std::unique_ptr<IConstantBuffer<half>> CreateConstantZeros<half>();
+
 #define SPECIALIZED_FILL(T) \
   template void Fill<T>(hipStream_t stream, T * output, T value, int64_t count);
 

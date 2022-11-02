@@ -127,6 +127,7 @@ set(provider_excluded_files
   "rnn/rnn_impl.h"
   "shared_inc/cuda_call.h"
   "shared_inc/fpgeneric.h"
+  "shared_inc/cuda_utils.h"
   "cuda_allocator.cc"
   "cuda_allocator.h"
   "cuda_call.cc"

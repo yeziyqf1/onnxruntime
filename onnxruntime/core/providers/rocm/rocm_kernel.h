@@ -144,6 +144,11 @@ class RocmKernel : public OpKernel {
     return provider_->template GetConstOnes<T>(count);
   }
 
+  template <typename T>
+  inline const T* GetConstZeros(size_t count) const {
+    return provider_->template GetConstZeros<T>(count);
+  }
+
   inline Status CopyTensor(const Tensor& src, Tensor& dst) const {
     return Info().GetDataTransferManager().CopyTensor(src, dst);
   }
