@@ -66,27 +66,6 @@ endif()
 include(protobuf_function)
 #protobuf end
 
-if (onnxruntime_DISABLE_CONTRIB_OPS)
-  add_definitions(-DDISABLE_CONTRIB_OPS)
-endif()
-
-if (onnxruntime_DISABLE_ML_OPS)
-  add_definitions(-DDISABLE_ML_OPS)
-endif()
-
-if (onnxruntime_DISABLE_SPARSE_TENSORS)
-  add_compile_definitions(DISABLE_SPARSE_TENSORS)
-endif()
-
-if (onnxruntime_DISABLE_OPTIONAL_TYPE)
-  add_compile_definitions(DISABLE_OPTIONAL_TYPE)
-endif()
-
-get_filename_component(ONNXRUNTIME_ROOT "${ONNXRUNTIME_ROOT}" ABSOLUTE)
-get_filename_component(ORTTRAINING_ROOT "${ORTTRAINING_ROOT}" ABSOLUTE)
-get_filename_component(REPO_ROOT "${REPO_ROOT}" ABSOLUTE)
-set(ONNXRUNTIME_INCLUDE_DIR ${REPO_ROOT}/include/onnxruntime)
-
 
 FetchContent_Declare(
       date

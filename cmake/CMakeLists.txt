@@ -799,6 +799,11 @@ if (onnxruntime_BUILD_SHARED_LIB OR onnxruntime_ENABLE_PYTHON)
   endif()
 endif()
 
+get_filename_component(ONNXRUNTIME_ROOT "${ONNXRUNTIME_ROOT}" ABSOLUTE)
+get_filename_component(ORTTRAINING_ROOT "${ORTTRAINING_ROOT}" ABSOLUTE)
+get_filename_component(REPO_ROOT "${REPO_ROOT}" ABSOLUTE)
+set(ONNXRUNTIME_INCLUDE_DIR ${REPO_ROOT}/include/onnxruntime)
+
 include(external/onnxruntime_external_deps.cmake)
 
 set(ORT_WARNING_FLAGS)
@@ -1006,6 +1011,21 @@ endif()
 
 function(onnxruntime_set_compile_flags target_name)
     target_compile_definitions(${target_name} PUBLIC EIGEN_USE_THREADS)
+	if (onnxruntime_DISABLE_CONTRIB_OPS)
+	  target_compile_definitions(${target_name} PRIVATE DISABLE_CONTRIB_OPS)
+	endif()
+
+	if (onnxruntime_DISABLE_ML_OPS)
+	  target_compile_definitions(${target_name} PRIVATE DISABLE_ML_OPS)
+	endif()
+
+	if (onnxruntime_DISABLE_SPARSE_TENSORS)
+	  target_compile_definitions(${target_name} PRIVATE DISABLE_SPARSE_TENSORS)
+	endif()
+
+	if (onnxruntime_DISABLE_OPTIONAL_TYPE)
+	  target_compile_definitions(${target_name} PRIVATE DISABLE_OPTIONAL_TYPE)
+	endif()
     if (onnxruntime_ENABLE_ATEN)
       target_compile_definitions(${target_name} PRIVATE ENABLE_ATEN)
     endif()
