@@ -400,6 +400,7 @@ class GraphExecutionManager(GraphExecutionInterface):
                     "verbose": self._debug_options.logging.log_level < LogLevel.WARNING,
                     "export_params": False,
                     "keep_initializers_as_inputs": True,
+                    "operator_export_type": torch.onnx.OperatorExportTypes.ONNX_ATEN_FALLBACK,
                 }
                 invalid_args = self._export_extra_kwargs.keys() & required_export_kwargs.keys()
                 assert (
