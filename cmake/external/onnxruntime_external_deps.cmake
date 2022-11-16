@@ -298,13 +298,6 @@ set(GSL_INCLUDE_DIR "$<TARGET_PROPERTY:${GSL_TARGET},INTERFACE_INCLUDE_DIRECTORI
 add_library(safeint_interface INTERFACE)
 target_include_directories(safeint_interface INTERFACE ${safeint_SOURCE_DIR})
 
-
-#onnxruntime_EXTERNAL_LIBRARIES could contain onnx, onnx_proto,libprotobuf, cuda/cudnn,
-# dnnl/mklml, onnxruntime_codegen_tvm, tvm and pthread
-# pthread is always at the last
-set(onnxruntime_EXTERNAL_LIBRARIES WIL::WIL nlohmann_json::nlohmann_json onnx onnx_proto ${PROTOBUF_LIB} re2::re2 Boost::mp11 safeint_interface flatbuffers ${GSL_TARGET})
-set(onnxruntime_EXTERNAL_DEPENDENCIES onnx_proto)
-
 # XNNPACK EP
 if (onnxruntime_USE_XNNPACK)
   if (onnxruntime_DISABLE_CONTRIB_OPS)
@@ -313,6 +306,16 @@ if (onnxruntime_USE_XNNPACK)
   endif()
   include(xnnpack)
 endif()
+
+#onnxruntime_EXTERNAL_LIBRARIES could contain onnx, onnx_proto,libprotobuf, cuda/cudnn,
+# dnnl/mklml, onnxruntime_codegen_tvm, tvm and pthread
+# pthread is always at the last
+set(onnxruntime_EXTERNAL_LIBRARIES ${onnxruntime_EXTERNAL_LIBRARIES_XNNPACK} WIL::WIL nlohmann_json::nlohmann_json onnx onnx_proto ${PROTOBUF_LIB} re2::re2 Boost::mp11 safeint_interface flatbuffers ${GSL_TARGET} ${ABSEIL_LIBS})
+# The source code of onnx_proto is generated, we must build this lib first before starting to compile the other source code that uses ONNX protobuf types.
+# The other libs do not have the problem. All the sources are already there. We can compile them in any order.
+set(onnxruntime_EXTERNAL_DEPENDENCIES onnx_proto)
+
+
 
 
 

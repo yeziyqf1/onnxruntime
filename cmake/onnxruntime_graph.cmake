@@ -87,7 +87,9 @@ endif()
 onnxruntime_add_static_library(onnxruntime_graph ${onnxruntime_graph_lib_src})
 add_dependencies(onnxruntime_graph onnx_proto flatbuffers)
 
-onnxruntime_add_include_to_target(onnxruntime_graph onnxruntime_common onnx onnx_proto ${PROTOBUF_LIB} flatbuffers safeint_interface Boost::mp11)
+get_target_property(AAAA  onnxruntime_common INTERFACE_SOURCES)
+message("XXXXXXXXXXX: ${AAAA}")
+onnxruntime_add_include_to_target(onnxruntime_graph onnxruntime_common WIL::WIL onnx onnx_proto ${PROTOBUF_LIB} flatbuffers safeint_interface Boost::mp11)
 
 if (MSVC)
   set(ONNX_PROTOBUF_NATVIS_FILE "onnx_protobuf.natvis")
