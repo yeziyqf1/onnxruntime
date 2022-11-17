@@ -40,8 +40,8 @@ namespace contrib {
 namespace rocm {
 
 template <typename T>
-Status LaunchFastGeluKernel(hipStream_t stream, int input_length, int bias_length,
-                          const T* input, const T* bias, T* output, bool tuning) {
+Status LaunchFastGeluKernel(bool tuning, hipStream_t stream, int input_length, int bias_length,
+                            const T* input, const T* bias, T* output) {
   static FastGeluTunableOp<T> op;
   if (tuning) {
     op.EnableTuning();
@@ -50,14 +50,14 @@ Status LaunchFastGeluKernel(hipStream_t stream, int input_length, int bias_lengt
   return op(&op_params);
 }
 
-template Status LaunchFastGeluKernel<float>(hipStream_t stream, int input_length, int bias_length,
-                                          const float* input, const float* bias, float* output, bool tuning);
+template Status LaunchFastGeluKernel<float>(bool tuning, hipStream_t stream, int input_length, int bias_length,
+                                            const float* input, const float* bias, float* output);
 
-template Status LaunchFastGeluKernel<BFloat16>(hipStream_t stream, int input_length, int bias_length,
-                                             const BFloat16* input, const BFloat16* bias, BFloat16* output, bool tuning);
+template Status LaunchFastGeluKernel<BFloat16>(bool tuning, hipStream_t stream, int input_length, int bias_length,
+                                               const BFloat16* input, const BFloat16* bias, BFloat16* output);
 
-template Status LaunchFastGeluKernel<half>(hipStream_t stream, int input_length, int bias_length,
-                                         const half* input, const half* bias, half* output, bool tuning);
+template Status LaunchFastGeluKernel<half>(bool tuning, hipStream_t stream, int input_length, int bias_length,
+                                           const half* input, const half* bias, half* output);
 
 }  // namespace rocm
 }  // namespace contrib
